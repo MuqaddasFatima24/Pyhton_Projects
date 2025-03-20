@@ -4,7 +4,7 @@ import time
 # Set page configuration
 st.set_page_config(page_title="Unit Converter", layout="wide", initial_sidebar_state="expanded")
 
-# Add custom CSS for fonts and glow effects
+# Add custom CSS for fonts, glow effects, and success message readability
 st.markdown("""
     <style>
         /* Resetting background to white */
@@ -57,6 +57,19 @@ st.markdown("""
             transform: scale(0.98); /* Scale effect when clicked */
         }
 
+        /* Improve readability of success messages */
+        .stAlert {
+            background-color: #f0f0f5 !important;  /* Light gray background */
+            color: #333 !important;  /* Dark text for contrast */
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #9b4dca; /* Keep it within theme */
+            text-align: center;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
         /* Add custom fonts */
         @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
 
@@ -77,22 +90,6 @@ st.markdown("""
 
         .author-section a {
             color: #9b4dca;
-        }
-
-        /* Custom styles for selectbox focus (when clicked) */
-        .stSelectbox:focus {
-            border-color: #9b4dca;
-            box-shadow: 0 0 5px rgba(155, 77, 202, 0.8);
-        }
-
-        /* Active state for selected items */
-        .stSelectbox option:checked {
-            background-color: #9b4dca;
-            color: white;
-        }
-
-        .stSelectbox .css-1s2u09g {
-            background-color: #9b4dca;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -120,9 +117,9 @@ conversion_rates = {
         "ounces": 35.274
     },
     "temperature": {
-        "celsius": 1,
-        "fahrenheit": lambda x: (x * 9/5) + 32,
-        "kelvin": lambda x: x + 273.15
+        "celsius": lambda c: c,
+        "fahrenheit": lambda c: (c * 9/5) + 32,
+        "kelvin": lambda c: c + 273.15
     },
     "volume": {
         "liters": 1,
@@ -194,7 +191,10 @@ with st.spinner('Working on your conversion... Please wait!'):
 if st.button("Convert"):
     if value > 0:
         result = convert_units(value, from_unit, to_unit, category)
-        st.success(f"✅ {value} {from_unit} is equal to {result:.2f} {to_unit}")
+        st.markdown(
+            f'<p class="stAlert">✅ {value} {from_unit} is equal to {result:.2f} {to_unit}</p>',
+            unsafe_allow_html=True
+        )
     else:
         st.error("❌ Please enter a valid number greater than 0.")
 
