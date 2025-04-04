@@ -89,7 +89,6 @@ if password:
     st.progress(score / 5)
     for message in feedback:
         st.write(message)
-    
     if score < 5:
         st.warning("💡 Consider using a stronger password.")
         suggested_password = generate_strong_password(password_length, include_digits, include_special)
